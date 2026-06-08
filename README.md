@@ -4,7 +4,7 @@ This is a growing project,include my learning track.
 
 
 
-\# 每日游戏开发学习日志
+# 每日游戏开发学习日志
 
 
 
@@ -12,7 +12,7 @@ This is a growing project,include my learning track.
 
 
 
-\## 目录结构
+## 目录结构
 
 
 
@@ -25,16 +25,15 @@ This is a growing project,include my learning track.
 
 
 
-\## 学习日志（核心概念、解决Bug、所犯错误）
+## 学习日志（核心概念、解决Bug、所犯错误）
 
 
 
-\### 2026-06-08
-
-* feat:1.初始化仓库目录结构
-* fix:
-* perf:
-* 心得：
-
-
-
+### 2026-06-08
+- 学习了 Git 基础命令：`git clone`、`git add`、`git commit -m`、`git push`
+- 在 GitHub 上创建了 `daily-game-dev` 仓库，并配置了目录结构（algorithms, math, engine, cpp, shaders, projects）
+- 理解了 `.gitkeep` 的作用：让 Git 追踪空文件夹
+- 学会了用记事本编辑 README.md 并解决乱码问题（另存为 UTF-8）
+- 整理了之前零散的 C++ 练习代码，按主题分类放入 `cpp/` 子目录
+- **犯的错误**：在 PowerShell 里直接输入 `algorithms/` 导致报错，应该用 `mkdir` 命令
+- **心得**：提交信息要用 `feat:` / `fix:` / `docs:` 等标签，方便未来回顾
