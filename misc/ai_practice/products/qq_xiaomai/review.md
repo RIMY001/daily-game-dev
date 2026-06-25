@@ -1,6 +1,6 @@
 # QQ好友-AI虚拟伴侣“小麦”交互测试报告
 
-> 完整聊天记录：[下载 Word 版](./xiaomai_chat_log.docx)
+> 完整聊天记录：[下载 Word 版](./chat_log.docx)
 
 测试人：白鸟（RIMY）
 
