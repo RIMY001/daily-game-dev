@@ -108,4 +108,4 @@ This is a growing project,include my learning track.
 - **收获**： 理解了重载赋值运算符与拷贝构造区别，深拷贝的必要性，如何避免自赋值问题
 
 ### 2026-06-27
-- **完成**: 1. const常对象、mutable练习
+- **完成**: 1. const常对象、mutable练习 2.基于多态的职工管理系统（50%）
