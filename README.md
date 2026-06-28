@@ -109,3 +109,6 @@ This is a growing project,include my learning track.
 
 ### 2026-06-27
 - **完成**: 1. const常对象、mutable练习 2.基于多态的职工管理系统（50%）
+
+### 2026-06-28
+- **完成**：1. 静态成员练习
