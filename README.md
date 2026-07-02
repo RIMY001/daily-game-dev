@@ -123,3 +123,6 @@ This is a growing project,include my learning track.
 
 ### 2026-07-01
 - **完成**：1.虚函数练习;2.学习vector容器；3.了解什么是OpenClaw；4.了解ai术语如：ML,DL/NN
+
+### 2026-07-02
+- **完成**：1.学习了五大分区和虚函数表原理
