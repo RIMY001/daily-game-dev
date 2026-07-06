@@ -134,6 +134,6 @@ This is a growing project,include my learning track.
 - **完成**：1.string容器练习；2.学习list、set容器
 
 ### 2026-07-06
-- **完成**：1.vector容器练习；
+- **完成**：1.vector容器练习；2.学习map；3.STL员工分组练习
 - **犯的错误**：1. erase(end())导致报错，end()是末尾之后，不是最后一个；
 - **收获**：对作用域和常见vector容器操作熟悉了
