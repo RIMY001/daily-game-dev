@@ -142,4 +142,4 @@ This is a growing project,include my learning track.
 - **完成**：1.STL学生信息储存案例练习；2.学习函数对象，常用查找、遍历算法
 
 ### 2026-07-08
-- **完成**：1.deque容器练习
+- **完成**：1.deque容器练习；2.学习常用排序、拷贝和替换、算数生成、集合算法
