@@ -143,3 +143,6 @@ This is a growing project,include my learning track.
 
 ### 2026-07-08
 - **完成**：1.deque容器练习；2.学习常用排序、拷贝和替换、算数生成、集合算法
+
+### 2026-07-09
+- **完成**：1.stack容器练习
