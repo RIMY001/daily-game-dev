@@ -154,4 +154,4 @@ This is a growing project,include my learning track.
 - **完成**：1.优先队列练习
 
 ### 2026-07-17
-- **完成**：1.set容器练习
+- **完成**：1.set容器练习;2.基于STL的演讲比赛流程(50%)；3.leetcode2题
