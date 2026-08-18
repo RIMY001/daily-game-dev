@@ -168,3 +168,6 @@ This is a growing project,include my learning track.
 ### 2026-07-27
 - **完成**：1.STL通讯录管理系统练习
 
+### 2026-08-18
+- **完成**：1.智能指针练习；
+
