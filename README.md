@@ -175,5 +175,5 @@ This is a growing project,include my learning track.
 - **完成**：1.算法题：接雨水；2.观看Unity教学:Unity脚本基础
 
 ### 2026-08-28
-- **完成**：1.算法题：无重复字符的最长字串；
+- **完成**：1.算法题：无重复字符的最长字串；2.观看Unity教学：GameObject
 
