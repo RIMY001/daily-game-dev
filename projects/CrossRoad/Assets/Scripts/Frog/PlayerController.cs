@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public TerrainManager terrainManager;
     private enum Direction
     { 
         Up, Right, Left
@@ -22,6 +23,10 @@ public class PlayerController : MonoBehaviour
     private bool buttonHeld;
     private bool isJump;
     private bool canJump;
+
+    private bool isDead;
+    
+    private RaycastHit2D[] result = new RaycastHit2D[2];
 
     private void Awake()
     {
@@ -46,16 +51,49 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
+        if (other.CompareTag("Water") && !isJump)
+        {
+            Physics2D.RaycastNonAlloc(transform.position + Vector3.up * 0.1f, Vector2.zero, result);
+            bool inWater = true;
+
+            foreach (var hit in result)
+            {
+                if (hit.collider == null) continue;
+
+                if (hit.collider.CompareTag("Wood"))
+                {
+                    //  TODO:跟随木板移动
+                    transform.parent = hit.collider.transform;
+                    inWater = false;
+                }        
+            }
+
+            //  没有木板游戏结束
+            if (inWater && !isJump)
+            {
+                isDead = true;
+                UnityEngine.Debug.Log("GAME OVER!");
+            }
+        }
+
         if (other.CompareTag("Border") || other.CompareTag("Car"))
         {
-            
+            isDead = true;
         }
 
         if (!isJump && other.CompareTag("Obstacle"))
         {
-
+            isDead = true;
         }
     }
+
+    //private void OnTriggerExit2D(Collider2D other)
+    //{
+    //    if (other.CompareTag("Wood"))
+    //    {
+    //        transform.parent = null;
+    //    }
+    //}
 
     #region INPUT 输入回调函数
     public void Jump(InputAction.CallbackContext context)
@@ -151,6 +189,8 @@ public class PlayerController : MonoBehaviour
 
         //修改排序图层
         sr.sortingLayerName = "Front";
+
+        transform.parent = null;
         
     }
 
@@ -159,6 +199,13 @@ public class PlayerController : MonoBehaviour
         isJump = false;
         //修改排序图层
         sr.sortingLayerName = "Middle";
+
+        if (dir == Direction.Up && !isDead)
+        {
+            //  TODO:得分，触发地图检测
+            //  FIXME
+            terrainManager.CheckPosition();
+        }
     }
 
     #endregion

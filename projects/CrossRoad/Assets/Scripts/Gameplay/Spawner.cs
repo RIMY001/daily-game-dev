@@ -17,8 +17,8 @@ public class Spawner : MonoBehaviour
     {
         int index = Random.Range(0, spawnObjects.Count);
         //  生成小车
-        GameObject car = Instantiate(spawnObjects[index], transform.position, Quaternion.identity, transform);
+        GameObject target = Instantiate(spawnObjects[index], transform.position, Quaternion.identity, transform);
         //  关联另外脚本的dir用以调整小车出现的方向
-        car.GetComponent<MoveForward>().dir = direction;
+        target.GetComponent<MoveForward>().dir = direction;
     }
 }
