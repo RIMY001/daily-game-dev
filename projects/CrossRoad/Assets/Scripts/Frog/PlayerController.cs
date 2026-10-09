@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public TerrainManager terrainManager;
     private enum Direction
     { 
         Up, Right, Left
@@ -14,6 +13,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
+    [Header("得分")]
+    public int stepPoint;
+    private int pointResult;
+    [Header("跳跃")]
     public float jumpDistance;
     private float moveDistance;
     private Vector2 destination;
@@ -107,6 +110,11 @@ public class PlayerController : MonoBehaviour
             
             canJump = true;
         }
+
+        if (dir == Direction.Up && context.performed && !isJump)
+        {
+            pointResult += stepPoint;
+        }
     }
 
     public void LongJump(InputAction.CallbackContext context)
@@ -121,6 +129,8 @@ public class PlayerController : MonoBehaviour
         {
             //执行跳跃
             //Debug.Log("LONG JUMP!" + " " + moveDistance);
+            if (dir == Direction.Up)
+                pointResult += stepPoint * 2;
             buttonHeld = false;
             
             canJump = true;
@@ -204,7 +214,11 @@ public class PlayerController : MonoBehaviour
         {
             //  TODO:得分，触发地图检测
             //  FIXME
-            terrainManager.CheckPosition();
+            //terrainManager.CheckPosition();
+
+            EventHandler.CallGetPointEvent(pointResult);
+
+            UnityEngine.Debug.Log("总得分：" + pointResult);
         }
     }
 

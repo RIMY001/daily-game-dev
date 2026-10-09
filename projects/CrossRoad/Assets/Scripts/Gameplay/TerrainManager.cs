@@ -14,6 +14,22 @@ public class TerrainManager : MonoBehaviour
     //    CheckPosition();
     //}
 
+
+    private void OnEnable()
+    {
+        EventHandler.GetPointEvent += OnGetPointEvent;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.GetPointEvent -= OnGetPointEvent;
+    }
+
+    private void OnGetPointEvent(int point)
+    {
+        CheckPosition();
+    }
+
     public void CheckPosition()
     {
         Debug.Log($"进入CheckPosition 管理器Y:{transform.position.y} 相机Y:{Camera.main.transform.position.y} 差值:{transform.position.y - Camera.main.transform.position.y}");
