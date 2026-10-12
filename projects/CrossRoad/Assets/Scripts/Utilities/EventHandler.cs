@@ -15,4 +15,10 @@ public class EventHandler
         //}
         GetPointEvent?.Invoke(point);
     }
+
+    public static event Action GameOverEvent;
+    public static void CallGameOverEvent()
+    {
+        GameOverEvent?.Invoke();
+    }
 }

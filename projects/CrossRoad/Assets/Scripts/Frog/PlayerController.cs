@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
+    private PlayerInput playerInput;
+
     [Header("得分")]
     public int stepPoint;
     private int pointResult;
@@ -36,10 +38,17 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     private void Update()
     {
+        if (isDead)
+        {
+            DisableInput();
+            return;
+        }
+
         if (canJump)
         {
             TriggerJump();     
@@ -87,6 +96,12 @@ public class PlayerController : MonoBehaviour
         if (!isJump && other.CompareTag("Obstacle"))
         {
             isDead = true;
+        }
+
+        if (isDead)
+        {
+            //  广播通知游戏结束
+            EventHandler.CallGameOverEvent();
         }
     }
 
@@ -223,4 +238,9 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
+
+    private void DisableInput()
+    {
+        playerInput.enabled = false;
+    }
 }
