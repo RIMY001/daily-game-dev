@@ -16,13 +16,16 @@ This is a growing project,include my learning track.
 
 
 
-* `algorithms/` - 数据结构与算法练习（排序、查找、动态规划等）
-* `math/` - 数学与图形学笔记和Demo（向量、矩阵、四元数等）
-* `engine/` - 引擎学习（Unity/UE 的小项目或测试场景）
-* `cpp/` - C++ 语法、特性、内存管理等练习
-* `shaders/` - 练习 （顶点着色器、片元着色器等）
-* `project/` - 综合小项目（比如一个小游戏原型）
-* `misc/` - 杂记（小主题知识、各种“为什么A写法比B好”的实验对比踩坑记录、编译错误分析、知识碎片）
+## 目录结构
+
+* `algorithms/` - 数据结构与算法学习  
+* `cpp/` - C++ 语法、特性、内存管理、STL 等练习
+* `engine/` - 引擎源码学习（如 Piccolo 引擎）
+* `game_patterns/` - 游戏客户端开发设计模式学习（含手册与实现）
+* `math/` - 数学与图形学笔记和 Demo（向量、矩阵、四元数等）
+* `misc/` - 杂记（小主题知识、实验对比、踩坑记录、编译错误分析等）
+* `projects/` - 综合项目（如 Unity 教程项目 CrossRoad）
+* `shaders/` - Shader 练习（顶点着色器、片元着色器等）
 
 
 ## 学习日志（核心概念、解决Bug、所犯错误）
