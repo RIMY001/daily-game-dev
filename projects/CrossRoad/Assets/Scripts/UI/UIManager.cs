@@ -45,6 +45,14 @@ public class UIManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        gameOverPanel.SetActive(false);
+        TransitionManager.instance.Transition("Gameplay");
+    }
+
+    public void BackToMenu()
+    {
+        gameOverPanel.SetActive(false);
+        TransitionManager.instance.Transition("Title");
     }
 }

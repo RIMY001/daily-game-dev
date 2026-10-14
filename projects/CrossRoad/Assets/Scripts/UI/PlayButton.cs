@@ -17,7 +17,8 @@ public class PlayButton : MonoBehaviour
 
     private void StartGame()
     {
-        //启动游戏切换游戏场景
-        SceneManager.LoadScene("Gameplay");
+        ////启动游戏切换游戏场景
+        //SceneManager.LoadScene("Gameplay");
+        TransitionManager.instance.Transition("Gameplay");
     }
 }

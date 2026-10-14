@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class TransitionManager : MonoBehaviour
 {
+    public static TransitionManager instance;
     private CanvasGroup canvasGroup;
     public float scaler;
 
@@ -11,11 +14,32 @@ public class TransitionManager : MonoBehaviour
     {
         canvasGroup = GetComponent<CanvasGroup>();
 
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this.gameObject);
+
+        DontDestroyOnLoad(this);
     }
 
     private void Start()
     {
         StartCoroutine(Fade(0));
+    }
+
+    public void Transition(string sceneName)
+    {
+        Time.timeScale = 1;
+        StartCoroutine(TransitionToScence(sceneName));
+    }
+
+    private IEnumerator TransitionToScence(string sceneName)
+    {
+        yield return Fade(1);   //  渐变：1是黑，0是透明
+
+        yield return SceneManager.LoadSceneAsync(sceneName);
+
+        yield return Fade(0);
     }
 
     private IEnumerator Fade(int amount)
