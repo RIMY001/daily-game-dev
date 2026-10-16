@@ -225,4 +225,11 @@ This is a growing project,include my learning track.
 ### 2026-10-13
 - **完成**：1.算法题：环形链表；环形链表II；2.Piccolo 游戏引擎源码：顶层入口：PiccoloEngine + RuntimeGlobalContext
 
+### 2026-10-14
+- **完成**：1.unity2D游戏：场景切换控制
 
+### 2026-10-15
+- **完成**：1.unity2D游戏：持久化保存数据
+
+### 2026-10-16
+- **完成**：1.Piccolo 游戏引擎源码:游戏对象框架：WorldManager、Level、GObject、Component; 2.算法题：合并两个有序链表
