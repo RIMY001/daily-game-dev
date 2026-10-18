@@ -233,3 +233,6 @@ This is a growing project,include my learning track.
 
 ### 2026-10-16
 - **完成**：1.Piccolo 游戏引擎源码:游戏对象框架：WorldManager、Level、GObject、Component; 2.算法题：合并两个有序链表
+
+### 2026-10-17
+- **完成**：1.单例模式实现
