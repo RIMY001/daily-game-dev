@@ -22,10 +22,9 @@ This is a growing project,include my learning track.
 * `cpp/` - C++ 语法、特性、内存管理、STL 等练习
 * `engine/` - 引擎源码学习（如 Piccolo 引擎）
 * `game_patterns/` - 游戏客户端开发设计模式学习（含手册与实现）
-* `math/` - 数学与图形学笔记和 Demo（向量、矩阵、四元数等）
 * `misc/` - 杂记（小主题知识、实验对比、踩坑记录、编译错误分析等）
 * `projects/` - 综合项目（如 Unity 教程项目 CrossRoad）
-* `shaders/` - Shader 练习（顶点着色器、片元着色器等）
+* `graphics` - 图形渲染相关知识
 
 
 ## 学习日志（核心概念、解决Bug、所犯错误）
