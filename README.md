@@ -245,6 +245,8 @@ This is a growing project,include my learning track.
 ### 2026-10-22
 - **完成**：1.算法题：两数相加;删除链表的倒数第N个结点
 
+### 2026-10-23
+- **完成**：1.快速排序练习
 
 
 
