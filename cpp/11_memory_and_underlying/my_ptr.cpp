@@ -115,6 +115,60 @@ static void test_default() {
 	CHECK(p.get() == nullptr);
 }
 
+//// ========== 新增 用例7：传入裸空指针给 shared_ptr(T*) 构造 ==========
+//static void test_null_rawptr()
+//{
+//	std::printf("[7] raw nullptr constructor\n");
+//	Tracked* raw = nullptr;
+//	my::shared_ptr<Tracked> sp(raw);
+//	CHECK(sp.get() == nullptr);
+//	CHECK(sp.use_count() == 0);
+//	CHECK(!sp);
+//	sp.reset();
+//	CHECK(sp.get() == nullptr);
+//	CHECK(Tracked::alive == 0);
+//}
+
+// ========== 新增 用例8：weak_ptr 拷贝构造 / 拷贝赋值，weak计数增加 ==========
+static void test_weak_copy()
+{
+	std::printf("[8] weak_ptr copy\n");
+	my::shared_ptr<Tracked> sp = my::make_shared<Tracked>(100);
+	my::weak_ptr<Tracked> w1(sp);
+	CHECK(!w1.expired());
+	CHECK(w1.use_count() == 1);
+
+	my::weak_ptr<Tracked> w2 = w1; // weak拷贝，weak_cnt++，强计数不变
+	CHECK(w1.use_count() == 1);
+	CHECK(w2.use_count() == 1);
+
+	{
+		my::weak_ptr<Tracked> w3;
+		w3 = w2;
+		CHECK(!w3.expired());
+		CHECK(w3.lock()->value == 100);
+	}
+	CHECK(sp.use_count() == 1);
+}
+
+// ========== 新增 用例9：strong归零、weak还在：对象销毁，控制块存活 ==========
+static void test_cb_survive_after_object_destroy()
+{
+	std::printf("[9] control block survives weak alive\n");
+	my::weak_ptr<Tracked> w;
+	{
+		my::shared_ptr<Tracked> sp = my::make_shared<Tracked>(200);
+		w = sp;
+		CHECK(Tracked::alive == 1);
+	}
+	// shared全部销毁：strong=0 → Tracked析构；weak>0，控制块保留
+	CHECK(Tracked::alive == 0);
+	CHECK(w.expired() == true);
+	CHECK(w.lock().get() == nullptr);
+	// 这里不能直接检查控制块是否在内存（用户层看不到）
+	// 但语义上：weak依然可以安全调用expired/lock，不会野指针崩溃
+}
+
 int main() {
 	test_copy_and_count();
 	test_move();
@@ -122,6 +176,10 @@ int main() {
 	test_weak_lock();
 	test_cycle();
 	test_default();
+
+	//	test_null_rawptr();
+	test_weak_copy();
+	test_cb_survive_after_object_destroy();
 
 	if (g_fail == 0) {
 		std::printf("\nALL PASS\n");
