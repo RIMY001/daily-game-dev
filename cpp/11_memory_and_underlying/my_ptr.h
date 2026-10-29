@@ -6,16 +6,62 @@ template <typename T>
 struct ControlBlock {
 	long strong_cnt;
 	long weak_cnt;
+	static long g_cb_alive;	//	静态所有对象共享
+
+	//	=========== 二选一 ===========
+	bool is_one_alloc;	// true = make_shared 一次分配，T 在内部 storage
 	//	缓冲区，用来放 T,和 ControlBlock 同一块内存
 	alignas(T) char storage[sizeof(T)];
+	T* external_ptr;
+
+	//	删除器
+	using Deleter = void(*)(T*);	//	这是一个函数指针
+	Deleter deleter;
 	
-	ControlBlock() : strong_cnt(1), weak_cnt(0) {}
+	ControlBlock() : strong_cnt(1), weak_cnt(0), is_one_alloc(true), deleter(default_del) { ++g_cb_alive; }	//函数退化成指针
+	//	外部裸指针版本构造
+	ControlBlock(T* p, Deleter d) : strong_cnt(1), weak_cnt(0), is_one_alloc(false), deleter(d) { ++g_cb_alive; }
+	~ControlBlock() { --g_cb_alive; }
+
+	static void default_del(T* p) { p->~T(); ::operator delete(p); }
 
 	//	获取 T 对象的地址
 	T* get_ptr() noexcept {
-		return reinterpret_cast<T*>(storage);
+		if (is_one_alloc)
+			return reinterpret_cast<T*>(storage);
+		else
+			return external_ptr;
+	}
+	//	shared_ptr 计数减少，释放旧资源
+	void dec_strong() {
+		//	释放当前持有的资源
+		this->strong_cnt--;
+		if (this->strong_cnt == 0) {
+			if (is_one_alloc) {
+				this->get_ptr()->~T();
+			}
+			else {
+				deleter(external_ptr);
+			}
+
+			if (this->weak_cnt == 0) {
+				this->~ControlBlock<T>();
+				::operator delete(this);
+			}
+		}
+	}
+	//	weak_ptr 计数减少，释放资源
+	void dec_weak() {
+		this->weak_cnt--;
+		if (this->weak_cnt == 0 && this->strong_cnt == 0) {
+			this->~ControlBlock<T>();
+			::operator delete(this);
+		}
 	}
 };
+//	类外初始化静态成员
+template <typename T>
+long ControlBlock<T>::g_cb_alive = 0;
 
 template <typename T>
 class shared_ptr {
@@ -29,7 +75,7 @@ private:
 
 public:
 	shared_ptr() noexcept;	//	空
-	//explicit shared_ptr(T* p);	//	接管裸指针
+	explicit shared_ptr(T* p);	//	接管裸指针
 	//  这里 shared_ptr 自动 = shared_ptr<T>，语法糖
 	shared_ptr(const shared_ptr&) noexcept;	//	拷贝，计数 +1
 	shared_ptr(shared_ptr&&) noexcept;	//	移动，源置空
@@ -71,8 +117,14 @@ shared_ptr<T> make_shared(Args&&... args);	//	一次分配（控制块 + 对象�
 template <typename T>
 my::shared_ptr<T>::shared_ptr() noexcept : cb_(nullptr) {}
 
-//template <typename T>
-//my::shared_ptr<T>::shared_ptr(T* p) : cb_(p ? new ControlBlock<T>(p) : nullptr) {}
+template <typename T>
+my::shared_ptr<T>::shared_ptr(T* p) {
+	if (p == nullptr) {
+		cb_ = nullptr;
+		return;
+	}
+	cb_ = new ControlBlock<T>(p, ControlBlock<T>::default_del);
+}
 
 template <typename T>
 my::shared_ptr<T>::shared_ptr(const my::shared_ptr<T>& other) noexcept : cb_(other.cb_) {
@@ -90,19 +142,7 @@ my::shared_ptr<T>& my::shared_ptr<T>::operator=(const my::shared_ptr<T>& other) 
 	//	this 是栈上临时指针，函数调用时产生，函数退出自动销毁，不属于对象
 	if (this == &other) return *this;	//	自赋值保护,防止将自己持有的资源释放后又通过引用访问可能会导致的UB
 
-	//	释放当前持有的资源
-	if (cb_) {
-		cb_->strong_cnt--;
-		if (cb_->strong_cnt == 0) {
-			// strong 归0，先析构 T 对象									//delete cb_->ptr;
-			cb_->get_ptr()->~T();										//if (cb_->weak_cnt == 0) {
-			if (cb_->weak_cnt == 0) {
-				//	weak 也归0， 析构控制块本身 + 释放整块内存
-				cb_->~ControlBlock<T>();								//	delete cb_;
-				::operator delete(cb_);
-			}															//}
-		}
-	}
+	if (cb_) cb_->dec_strong();
 
 	//	接管 other 的控制块
 	if (other.cb_) {
@@ -116,17 +156,7 @@ template <typename T>
 my::shared_ptr<T>& my::shared_ptr<T>::operator=(my::shared_ptr<T>&& other) noexcept{
 	if (this == &other) return *this;
 
-	//	释放当前持有的资源
-	if (cb_) {
-		cb_->strong_cnt--;
-		if (cb_->strong_cnt == 0) {
-			cb_->get_ptr()->~T();										
-			if (cb_->weak_cnt == 0) {
-				cb_->~ControlBlock<T>();								
-				::operator delete(cb_);
-			}															
-		}
-	}
+	if (cb_) cb_->dec_strong();
 
 	//	偷走对方的控制块
 	cb_ = other.cb_;
@@ -137,16 +167,7 @@ my::shared_ptr<T>& my::shared_ptr<T>::operator=(my::shared_ptr<T>&& other) noexc
 template <typename T>
 my::shared_ptr<T>::~shared_ptr() {
 	//	释放当前持有的资源
-	if (cb_) {
-		cb_->strong_cnt--;
-		if (cb_->strong_cnt == 0) {
-			cb_->get_ptr()->~T();
-			if (cb_->weak_cnt == 0) {
-				cb_->~ControlBlock<T>();
-				::operator delete(cb_);
-			}
-		}
-	}
+	if (cb_) cb_->dec_strong();
 }
 
 template <typename T>
@@ -172,16 +193,7 @@ long my::shared_ptr<T>::use_count() const noexcept {
 template <typename T> 
 void my::shared_ptr<T>::reset() noexcept {
 	//	释放当前持有的资源
-	if (cb_) {
-		cb_->strong_cnt--;
-		if (cb_->strong_cnt == 0) {
-			cb_->get_ptr()->~T();
-			if (cb_->weak_cnt == 0) {
-				cb_->~ControlBlock<T>();
-				::operator delete(cb_);
-			}
-		}
-	}
+	if(cb_) cb_->dec_strong();
 	cb_ = nullptr;
 }
 
@@ -215,9 +227,7 @@ my::weak_ptr<T>& my::weak_ptr<T>::operator=(const my::weak_ptr<T>& other) noexce
 	if (cb_ == other.cb_) return *this;
 
 	//	释放旧资源
-	if (cb_) {
-		cb_->weak_cnt--;
-	}
+	if (cb_) cb_->dec_weak();
 	//	接管 other 的控制块
 	cb_ = other.cb_;
 	if (other.cb_) other.cb_->weak_cnt++;
@@ -229,9 +239,7 @@ my::weak_ptr<T>& my::weak_ptr<T>::operator=(const my::shared_ptr<T>& other) noex
 	if (cb_ == other.cb_) return *this;
 
 	//	释放旧资源
-	if (cb_) {
-		cb_->weak_cnt--;
-	}
+	if (cb_) cb_->dec_weak();
 	//	接管 other 的控制块
 	cb_ = other.cb_;
 	if (other.cb_) other.cb_->weak_cnt++;
@@ -243,9 +251,7 @@ my::weak_ptr<T>& my::weak_ptr<T>::operator=(my::weak_ptr<T>&& other) noexcept {
 	if (this == &other) return *this;
 
 	//	释放旧资源
-	if (cb_) {
-		cb_->weak_cnt--;
-	}
+	if (cb_) cb_->dec_weak();
 	//	偷走对方的控制块
 	cb_ = other.cb_;
 	other.cb_ = nullptr;
@@ -255,9 +261,7 @@ my::weak_ptr<T>& my::weak_ptr<T>::operator=(my::weak_ptr<T>&& other) noexcept {
 template <typename T>
 my::weak_ptr<T>::~weak_ptr() {
 	//	释放自己的资源
-	if (cb_) {
-		cb_->weak_cnt--;
-	}
+	if (cb_) cb_->dec_weak();
 }
 
 template <typename T>
