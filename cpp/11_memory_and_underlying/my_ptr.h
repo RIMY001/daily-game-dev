@@ -8,41 +8,31 @@ struct ControlBlock {
 	long weak_cnt;
 	static long g_cb_alive;	//	静态所有对象共享
 
-	//	=========== 二选一 ===========
-	bool is_one_alloc;	// true = make_shared 一次分配，T 在内部 storage
 	//	缓冲区，用来放 T,和 ControlBlock 同一块内存
 	alignas(T) char storage[sizeof(T)];
-	T* external_ptr;
+	T* ptr_;
 
 	//	删除器
 	using Deleter = void(*)(T*);	//	这是一个函数指针
 	Deleter deleter;
 	
-	ControlBlock() : strong_cnt(1), weak_cnt(0), is_one_alloc(true), deleter(default_del) { ++g_cb_alive; }	//函数退化成指针
+	ControlBlock() : strong_cnt(1), weak_cnt(0), ptr_(nullptr), deleter(nullptr) { ++g_cb_alive; }	//函数退化成指针
 	//	外部裸指针版本构造
-	ControlBlock(T* p, Deleter d) : strong_cnt(1), weak_cnt(0), is_one_alloc(false), deleter(d) { ++g_cb_alive; }
+	ControlBlock(T* p, Deleter d) : strong_cnt(1), weak_cnt(0), ptr_(p), deleter(d) { ++g_cb_alive; }
 	~ControlBlock() { --g_cb_alive; }
 
 	static void default_del(T* p) { p->~T(); ::operator delete(p); }
 
 	//	获取 T 对象的地址
 	T* get_ptr() noexcept {
-		if (is_one_alloc)
-			return reinterpret_cast<T*>(storage);
-		else
-			return external_ptr;
+		return ptr_;
 	}
 	//	shared_ptr 计数减少，释放旧资源
 	void dec_strong() {
 		//	释放当前持有的资源
 		this->strong_cnt--;
 		if (this->strong_cnt == 0) {
-			if (is_one_alloc) {
-				this->get_ptr()->~T();
-			}
-			else {
-				deleter(external_ptr);
-			}
+			deleter(ptr_);
 
 			if (this->weak_cnt == 0) {
 				this->~ControlBlock<T>();
@@ -285,11 +275,26 @@ long my::weak_ptr<T>::use_count() const noexcept {
 
 template <typename T, typename... Args>
 my::shared_ptr<T> my::make_shared(Args&&... args) {
-	//	一次性分配ControlBlock大小内存
+	// 1. 一次性分配整块内存：大小 = ControlBlock<T>（内含storage）
 	void* raw = ::operator new(sizeof(ControlBlock<T>));
-	//	placement new 构造控制块
+	// 2. placement new 构造ControlBlock（此时ptr_是空，deleter是空）
 	ControlBlock<T>* cb = new (raw) ControlBlock<T>();
-	//	在 storage 里 placement new 构造T
-	new (cb->get_ptr()) T(std::forward<Args>(args)...);
+	try {
+		// 3. 在storage缓冲区上placement new构造T对象
+		T* obj = new (cb->storage) T(std::forward<Args>(args)...);
+		// 4. 回填 ptr_ 指向刚构造好的T
+		cb->ptr_ = obj;
+		// 5. 设置专属删除器：只析构，不delete内存！
+		cb->deleter = [](T* q) {
+			q->~T();
+			};
+	}
+	catch (...) {
+		// 【异常安全补充思路】T构造抛异常：
+		// CB已经构造出来了，但是T构造失败，需要销毁CB、释放内存，防止泄漏
+		cb->~ControlBlock<T>();
+		::operator delete(raw);
+		throw;
+	}
 	return my::shared_ptr<T>(cb);
 }
