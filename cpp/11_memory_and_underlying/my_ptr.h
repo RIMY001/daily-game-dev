@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <utility>
+#include <new>
 namespace my {
 
 template <typename T>

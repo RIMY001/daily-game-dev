@@ -128,19 +128,30 @@ static void test_default() {
 	CHECK(my::ControlBlock<Tracked>::g_cb_alive == 0);
 }
 
-// ========== 新增 用例7：传入裸空指针给 shared_ptr(T*) 构造 ==========
+// ========== 新增 用例7： shared_ptr(T*) 裸指针构造：空裸指针 + 合法裸指针 ==========
 static void test_null_rawptr()
 {
-	std::printf("[7] raw nullptr constructor\n");
-	Tracked* raw = nullptr;
-	my::shared_ptr<Tracked> sp(raw);
-	CHECK(sp.get() == nullptr);
-	CHECK(sp.use_count() == 0);
-	CHECK(!sp);
-	sp.reset();
-	CHECK(sp.get() == nullptr);
-	CHECK(Tracked::alive == 0);
-  CHECK(my::ControlBlock<Tracked>::g_cb_alive == 0);
+	std::printf("[7] raw nullptr constructor (null + non-null)\n");
+	{
+		Tracked* raw = nullptr;
+		my::shared_ptr<Tracked> sp(raw);
+		CHECK(sp.get() == nullptr);
+		CHECK(sp.use_count() == 0);
+		CHECK(!sp);
+		sp.reset();
+		CHECK(sp.get() == nullptr);
+		CHECK(Tracked::alive == 0);
+		CHECK(my::ControlBlock<Tracked>::g_cb_alive == 0);
+	}
+	{
+		Tracked* raw = new Tracked(5);
+		my::shared_ptr<Tracked> sp(raw);
+		CHECK(sp.get() == raw);
+		CHECK(sp->value == 5);
+		CHECK(sp.use_count() == 1);
+		CHECK(Tracked::alive == 1);
+		CHECK(my::ControlBlock<Tracked>::g_cb_alive == 1);
+	}
 }
 
 // ========== 新增 用例8：weak_ptr 拷贝构造 / 拷贝赋值，weak计数增加 ==========
@@ -199,7 +210,7 @@ int main() {
 	test_cycle();
 	test_default();
 
-	//	test_null_rawptr();
+	test_null_rawptr();
 	test_weak_copy();
 	test_cb_survive_after_object_destroy();
 
