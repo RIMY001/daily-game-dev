@@ -288,7 +288,7 @@ This is a growing project,include my learning track.
 - **完成**：1.mode_cost.cpp测试普通函数与系统调用
 
 ### 2026-11-12
-- **完成**：1.对比三个API：共享页读取/真系统普通内存读；2.编写 `thread_shape.cpp` 验证线程的内存布局模型；3.编写 `sysinfo.cpp` 获取操作系统四大核心参数；4.编写 `frame_budget.cpp` 模拟 300 帧的三段耗时测试，并计算平均值与 p99
+- **完成**：1.对比三个API：共享页读取/真系统普通内存读；2.编写 `thread_shape.cpp` 验证线程的内存布局模型；3.编写 `sysinfo.cpp` 获取操作系统四大核心参数；4.编写 `frame_budget.cpp` 模拟 300 帧的三段耗时测试，并计算平均值与 p99;5.算法题：括号生成
 
 
 
