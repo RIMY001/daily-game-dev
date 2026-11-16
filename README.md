@@ -294,7 +294,8 @@ This is a growing project,include my learning track.
 - **完成**：1.编写 `vmem_walk.cpp` 遍历本进程的虚拟地址空间;2.编写 `addr_split.cpp`：获取系统页大小，并手动通过位运算将一个局部变量的虚拟地址拆解为「页号」与「页内偏移」
 
 ### 2026-11-16
-- **完成**：1.编写 `fault_touch.cpp`：对比「仅保留（Reserve）地址空间」与「提交（Commit）后首次触碰（Touch）」的差别
+- **完成**：1.编写 `fault_touch.cpp`：对比「仅保留（Reserve）地址空间」与「提交（Commit）后首次触碰（Touch）」的差别；
+2.编写 `file_map.cpp`：对比内存映射（MapViewOfFile / mmap）与常规文件读取（ReadFile）
 
 
 
