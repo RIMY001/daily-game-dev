@@ -297,5 +297,6 @@ This is a growing project,include my learning track.
 - **完成**：1.编写 `fault_touch.cpp`：对比「仅保留（Reserve）地址空间」与「提交（Commit）后首次触碰（Touch）」的差别；
 2.编写 `file_map.cpp`：对比内存映射（MapViewOfFile / mmap）与常规文件读取（ReadFile）
 
-
+### 2026-11-17
+- **完成**：1.算法题：腐烂的橘子；
 
