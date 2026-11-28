@@ -1,0 +1,32 @@
+# 01 核心模块 (Core Modules)
+
+记录 UE 各大核心模块的实践心得、踩坑与架构理解。
+
+##  1. 3C (Character, Camera, Control)
+- [ ] 角色移动组件 (`UCharacterMovementComponent`) 参数调优与底层逻辑。
+- [ ] 摄像机碰撞与弹簧臂 (`SpringArmComponent`) 的平滑跟随。
+- [ ] 增强输入系统 (Enhanced Input) 的上下文映射与优先级。
+
+##  2. 动画系统 (Animation)
+- [ ] 状态机 (State Machine) 与混合空间 (Blend Space)。
+- [ ] 动画蒙太奇 (Anim Montage) 与通知 (Notify) 结合实现攻击判定。
+- [ ] 逆向运动学 (IK) 与 Control Rig 基础。
+
+##  3. UI 系统 (UMG & Slate)
+- [ ] UMG 锚点自适应与 Widget 生命周期。
+- [ ] 事件驱动与数据绑定，避免 UI 与游戏逻辑强耦合。
+- [ ] UI 性能优化（避免每帧 Tick 刷新）。
+
+##  4. 战斗与 GAS (Gameplay Ability System)
+- [ ] Ability, Attribute, Effect 的三权分立。
+- [ ] 如何配置火球术等主动技能与 Buff。
+- [ ] Gameplay Tags 的使用与响应。
+
+##  5. AI 系统
+- [ ] 行为树 (BT) 核心节点 (Sequence, Selector, Task, Decorator)。
+- [ ] 黑板 (Blackboard) 数据同步。
+- [ ] 寻路网格 (NavMesh) 生成与动态障碍物。
+
+##  6. 网络同步 (Networking)
+- [ ] 角色移动的客户端预测与服务器校正。
+- [ ] RPC 通信机制与属性复制 (Replication)。

@@ -1,0 +1,36 @@
+# Unreal Engine 学习总纲与知识库
+
+本目录记录我对 UE 引擎的系统性学习。遵循“**会用 -> 高效 -> 探底**”的路线。
+
+##  学习路线图
+- [ ] **阶段一：核心模块（会用）** -> 见 [`01_core_modules/`](./01_core_modules/)
+- [ ] **阶段二：工作流与工具链（高效）** -> 见 [`02_workflow_and_tools/`](./02_workflow_and_tools/)
+- [ ] **阶段三：底层与源码原理（探底）** -> 见 [`03_under_the_hood/`](./03_under_the_hood/)
+
+---
+
+##  UE 客户端开发能力矩阵 (查漏补缺用)
+
+### 一、 核心模块
+- [ ] **3C 系统**：CharacterMovement, SpringArmCamera, Enhanced Input.
+- [ ] **动画系统**：Animation Blueprint, Blend Space, Anim Montage, Control Rig.
+- [ ] **UI 系统**：UMG 布局, 数据绑定, Slate 基础, HUD.
+- [ ] **战斗与 GAS**：GameplayAbilitySystem, AttributeSet, GameplayCue.
+- [ ] **AI 系统**：Behavior Tree (行为树), Blackboard (黑板), EQS (环境查询), Navigation.
+- [ ] **网络同步**：RPC (Server/Client/Multicast), Replication (属性同步), 预测与回滚。
+- [ ] **C++ 与 蓝图**：UPROPERTY/UFUNCTION 宏, 蓝图通信, C++ 暴露接口给蓝图。
+
+### 二、 工程与工具链
+- [ ] **环境与调试**：Rider/VS 配置, 断点调试, 调用堆栈查看。
+- [ ] **性能分析**：Unreal Insights, Stat 命令 (stat unit / stat gpu)。
+- [ ] **版本管理**：Git LFS, SourceTree/Fork, 解决资产冲突。
+- [ ] **自动化**：Python 脚本 (资产批处理), Commandlet (自动化打包)。
+
+### 三、 底层原理 (后期解锁)
+- [ ] **内存与 GC**：UObject 内存布局, 垃圾回收机制, FMemory 分配器。
+- [ ] **反射系统**：UHT (Unreal Header Tool) 原理, UClass 结构。
+- [ ] **渲染管线**：RHI, RDG (Render Dependency Graph)。
+
+---
+
+## 🔗 跨领域知识交汇
