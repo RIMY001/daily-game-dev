@@ -2,21 +2,21 @@
 
 “工程师不应把时间浪费在重复劳动上。”——记录如何提升开发效率与排错能力。
 
-##  IDE 与编码效率
+## IDE 与编码效率
 - [ ] Rider for Unreal Engine 的神级快捷键与 Live Templates。
 - [ ] VS 的 Unreal 插件配置与内存泄漏排查。
 - [ ] C++ 热重载 (Live Coding) 的局限性与使用边界。
 
-##  版本控制与资产
+## 版本控制与资产
 - [ ] Git + LFS 配置流程（防止 `.uasset` 撑爆仓库）。
 - [ ] 为什么不要用 Git 的自动合并？如何处理 `.umap` 冲突？
 - [ ] 大文件存放规范与目录结构管理。
 
-##  调试与排错
+## 调试与排错
 - [ ] 常见崩溃 (Crash) 日志分析与 Callstack 定位。
 - [ ] 使用 `stat startfile` / `stat stopfile` 抓取 Profiling 数据。
 
-##  自动化与扩展
+## 自动化与扩展
 - [ ] 编写 Python 脚本在 Editor 中批量修改资产属性。
 - [ ] 使用 Commandlet 实现自动化的编译、Cook 与打包。
 - [ ] 编辑器插件 (Editor Plugin) 基础开发。
